@@ -1,0 +1,57 @@
+
+      <!-- result section -->
+      <div class="finalResultSection">
+         <div class="container" style="margin-top: 60px;">
+            <div class="row resultRow">
+               <div class="finalResultIconFee">
+                  <center><p class="welcomeLine">Please click below to download your LOR and Transcript documents</span>
+                     </p></center>
+               </div>
+            </div>
+             <div class="appDetailBtnSection">
+         <div class="container">
+            <div class="row">
+               <button class="btn appDetailSaveBtn"  ><a href="https://www.atlasuniversity.edu.in/masterprogression/demo/downloadUrlToFile/<%= master_lor_file %>" > Download LoR </a> </button>
+        
+            </div>
+            <div class="row">
+            
+               <button class="btn appDetailSaveBtn"  ><a href="https://www.atlasuniversity.edu.in/masterprogression/demo/downloadUrlToFile/<%= master_transcript_file %>" >Download Transcript</a> </button>
+             
+            </div>
+         </div>
+      </div>
+            
+         </div>
+      </div>
+      <!-- result section end-->
+      <!-- header end -->
+     
+   <script>
+      function openNav() {
+        document.getElementById("mySidenav").style.width = "341px";
+      }
+
+      function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+      }
+      
+      function semesterClick()
+{
+   
+	$.ajax
+	({
+		type:"POST",
+		url:'<%= base_url('semester/semesterClick') %>',
+        
+        dataType: "json",
+	  	success:function(res)
+		{
+		  window.location="<%= base_url() %>semester/paynow";
+		    
+		}
+	});	
+	
+}
+    </script>
+   

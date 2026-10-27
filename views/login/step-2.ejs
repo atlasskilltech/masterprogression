@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Maven+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="<%= base_url('assets/admission/css/style.css') %>">
+    <link rel="stylesheet" type="text/css" href="<%= base_url('assets/admission/css/font.css') %>">
+    <title>Admission Portal</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5FTSFZ9M92"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', 'G-5FTSFZ9M92');
+    </script>
+  </head>
+  <body class="login-new">
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#"><img src="<%= base_url('assets/admission/images/atlas-logo.png') %>" class="logo-img"></a>
+      </nav>
+    </header>
+
+    <div>
+      <section>
+        <div class="container">
+          <div class="row top-section">
+            <div class="col-md-12">
+              <p class="login-first-line">Mobile Number to receive the <br>
+                <span class="highlight-text">Verification Code</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="email-list section">
+        <div class="container">
+          <form action="javascript:void(0)" class="choose-no">
+            <%
+              var i = 1;
+              var labels = {
+                appln_phone: 'Your Mobile Number',
+                appln_fatherPhone: "Father's Mobile Number",
+                appln_motherPhone: "Mother's Mobile Number"
+              };
+              Object.keys(mobiles).forEach(function (key) {
+                var val = mobiles[key];
+                var mobileName = labels[key] || 'Your Mobile Number';
+            %>
+            <div class="row r-gap">
+              <div class="col-md-12">
+                <div class="list-grp">
+                  <div class="chech-div">
+                    <span class="input-group-text check-style">
+                      <label class="checkbox">
+                        <input type="checkbox" id="test<%= i %>" name="mobile" value="<%= val %>" <%= i === 1 ? 'checked="checked"' : '' %> />
+                        <span></span>
+                      </label>
+                    </span>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="list-style">
+                        <p class="input-list-text"><%= mobileName %>: <span class="input-list-detail"> xxxxxx<%= String(val).slice(-4) %></span></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% i++; }); %>
+
+            <div class="row otp-btn-row">
+              <div class="btn-gap">
+                <div class="input-group mb-3">
+                  <button type="button" class="btn login-back-btn" onClick="window.location.href='<%= base_url('login/verification/goBackToApplnStatus') %>'"><img src="<%= base_url('assets/admission/images/back-btn-img.png') %>"></button>
+                  <div class="input-group-append">
+                    <button type="button" class="btn login-back-btn login-back-txt-btn" onClick="window.location.href='<%= base_url('login/verification/goBackToApplnStatus') %>'">Back</button>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div class="input-group mb-3">
+                  <button type="button" class="btn login-otp-btn" onClick="generateOTP()">Send OTP</button>
+                  <div class="input-group-append">
+                    <button type="button" class="btn login-side-btn" onClick="generateOTP()"><img src="<%= base_url('assets/admission/images/btn-img.png') %>"></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </section>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+      function generateOTP() {
+        var mobile = $("input[name='mobile']:checked").val();
+        $.ajax({
+          type: "POST",
+          url: "<%= base_url('login/verification/generateOTP') %>",
+          dataType: "json",
+          data: { mobile: mobile },
+          success: function (res) {
+            if (res.status == 0) {
+              $(".buttn-wraper").html('<button class="status-next" style="background-color:#FFF; color:#FF0000; border:solid 1px #FF0000">' + res.msg + '</button>');
+            } else if (res.status == 1) {
+              window.location = "<%= base_url('login/verification/verificationIndex') %>";
+            }
+          }
+        });
+      }
+
+      // Keep a single mobile selected at a time.
+      $("input:checkbox").on('click', function () {
+        var $box = $(this);
+        if ($box.is(":checked")) {
+          var group = "input:checkbox[name='" + $box.attr("name") + "']";
+          $(group).prop("checked", false);
+          $box.prop("checked", true);
+        } else {
+          $box.prop("checked", false);
+        }
+      });
+    </script>
+  </body>
+</html>

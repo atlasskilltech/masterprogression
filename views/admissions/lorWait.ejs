@@ -1,0 +1,48 @@
+
+      <!-- result section -->
+      <div class="finalResultSection">
+         <div class="container-fluid pt-lg-5 pt-xl-5 pt-md-5 pt-sm-5 pt-0">
+          
+            <div class="row w-100 resultRow show-on-desktop d-flex justify-content-center">
+               <img class="my-w-65" src="https://www.atlasuniversity.edu.in/masterprogression/assets/Verification1-Image_800.png">
+            </div>
+            
+              <div class="row resultRow show-on-mobile">
+               <img class="w-100" src="https://www.atlasuniversity.edu.in/masterprogression/assets/Verification-Image-mobile.png">
+            </div>
+            
+            
+            
+         </div>
+      </div>
+      <!-- result section end-->
+      <!-- header end -->
+     
+   <script>
+      function openNav() {
+        document.getElementById("mySidenav").style.width = "341px";
+      }
+
+      function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+      }
+      
+      function semesterClick()
+{
+   
+	$.ajax
+	({
+		type:"POST",
+		url:'<%= base_url('semester/semesterClick') %>',
+        
+        dataType: "json",
+	  	success:function(res)
+		{
+		  window.location="<%= base_url() %>semester/paynow";
+		    
+		}
+	});	
+	
+}
+    </script>
+   

@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Untitled Document</title>
+<style type="text/css">
+<!--
+body {
+	margin-left: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+}
+-->
+</style></head>
+
+<body >
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet"> 
+<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td height="973" align="center" valign="top" bgcolor="#f0f0f0"><br />
+      <table  width="1050" border="0" align="center" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="background-image:url(<%= base_url() %>mailer/img_xx.png); background-position:bottom; background-repeat:no-repeat;" height="128" align="center" valign="bottom" ><br />
+          <br />
+          <img src="<%= base_url() %>mailer/isme-big.png" height="64" />          <img src="<%= base_url() %>mailer/spacer.png" width="1" height="32" /></td>
+        </tr> 
+      </table>
+      <table style="background-image:url(<%= base_url() %>mailer/img_bg-m.png); background-repeat:repeat-y;" width="1050" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td height="641" align="center" valign="top"><table width="812" border="0" cellspacing="0" cellpadding="0" >
+            <tr>
+              <td height="119" align="center" valign="middle" style="background-image:url(<%= base_url() %>mailer/img_02_shadow-top.png); background-repeat:repeat-x;"><table style="border: 2px dotted #ee3327; " width="39%" border="0" align="center" cellpadding="5" cellspacing="0">
+                  <tr>
+                    <td height="32" align="center" valign="middle"><a style="font-family: 'Roboto', sans-serif; font-weight:500; font-size:22px; color:#ee3327;">Applicant Number: <%= basicApplnDetails.applnID %> </a></td>
+                  </tr>
+              </table></td>
+            </tr>
+          </table>
+          <table width="812" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td><table width="90%" border="0" align="center" cellpadding="3" cellspacing="0">
+                    <tr>
+                      <td align="center"><p><a style="font-family: 'Roboto', sans-serif; font-weight:500; font-size:18px; color:#03977c; line-height:26px;">Dear <%= basicApplnDetails.name %>,</a><br />
+                        <span style="font-family: 'Roboto', sans-serif; font-weight:400; font-size:16px; line-height:24px;">Congratulations! You have successfully paid your application fee &amp; are one step closer 
+                      to shaping your career at <%= basicApplnDetails.school_name %>. Your application id is <a style="font-weight:500;"><%= basicApplnDetails.applnID %>.</a> Please mention your application id in all future communications with <%= basicApplnDetails.school_name %>.</span></p>
+                      </td>
+                    </tr>
+                </table></td>
+              </tr>
+            </table>
+            <table width="812" border="0" cellspacing="0" cellpadding="0" >
+              <tr>
+                <td height="25" align="center" valign="middle" style="background-image:url(<%= base_url() %>mailer/sh_top.png); background-repeat:repeat-x;"><img src="<%= base_url() %>mailer/spacer.png" width="1" height="25" /></td>
+              </tr>
+              <tr>
+                <td height="189" align="center" valign="top" ><img src="<%= base_url() %>mailer/spacer.png" width="1" height="10" /><br />
+                  <table width="812" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td height="168" valign="top"><table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td height="37" align="center" valign="top"><a style="font-family: 'Roboto', sans-serif; font-weight:500; font-size:24px; color:#435fb2;" >Payment Details </a><a style="font-family: 'Roboto', sans-serif; font-weight:400; font-size:24px; color:#435fb2;"></a></td>
+                        </tr>
+                        <tr>
+                          <td height="204" align="center" valign="top"><table style="border: 1px solid #3c5dab;" width="70%" border="0" cellspacing="0" cellpadding="6">
+                            <tr>
+                              <td width="52%" align="center" bgcolor="#3c5dab"><a style="font-weight:bold; color:#FFF; font-family: 'Roboto', sans-serif;  font-size:14px; line-height:22px;">Particulars</a></td>
+                              <td width="48%" align="center" bgcolor="#3c5dab"><a style="font-weight:bold; color:#FFF; font-family: 'Roboto', sans-serif;  font-size:14px; line-height:22px;">Amount</a></td>
+                            </tr>
+                            <tr>
+                              <td align="center"><a style="color:#333333; font-family: 'Roboto', sans-serif; font-size:14px; line-height:22px;">Application Fee </a></td>
+                              <td align="center"><a style="color:#333333; font-family: 'Roboto', sans-serif; font-size:14px; line-height:22px;"><%= nf(amount['basicAmt']) %></a></td>
+                            </tr>
+                            <% (taxDetails || []).forEach(function (rows, key) { %>
+							<tr>
+                              <td align="center" <%= key % 2 === 0 ? 'bgcolor="#F0F8FF"' : '' %>><a style="color:#333333; font-family: 'Roboto', sans-serif; font-size:14px; line-height:22px;"><%= rows.tax_name + ' @ ' + rows.tax_value %>%</a></td>
+                              <td align="center" <%= key % 2 === 0 ? 'bgcolor="#F0F8FF"' : '' %>><a style="color:#333333; font-family: 'Roboto', sans-serif; font-size:14px; line-height:22px;"><%= nf(rows.amount) %></a></td>
+                            </tr>
+							<% }); %>
+							
+                            <tr>
+                              <td align="center" bgcolor="#F0F8FF"><a style="font-weight:bold; color:#333333; font-family: 'Roboto', sans-serif;  font-size:14px; line-height:22px;">Grand Total </a></td>
+                              <td align="center" bgcolor="#F0F8FF"><a style="font-weight:bold; color:#333333; font-family: 'Roboto', sans-serif;  font-size:14px; line-height:22px;"><%= nf(amount['totalAmt']) %></a></td>
+                            </tr>
+                          </table>
+                           <a  style="color:#333333; font-family: 'Roboto', sans-serif; font-size:11px; line-height:22px;"> **Application Fee is Non-Refundable</a></td>
+                        </tr>
+                      </table></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td height="20" align="center" valign="middle" style="background-image:url(<%= base_url() %>mailer/sh_bottom.png); background-repeat:repeat-x;"><img src="<%= base_url() %>mailer/spacer.png" width="1" height="20" /></td>
+              </tr>
+            </table>
+            <table width="812" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td height="122" valign="top"><table width="95%" border="0" align="center" cellpadding="3" cellspacing="0">
+                    <tr>
+                      <td height="122" align="center" valign="middle" style="font-family: 'Roboto', sans-serif; font-weight:400; font-size:14px; line-height:22px;"><p ><a href="<%= basicApplnDetails.school_admission_login_url %>"><img src="<%= base_url() %>mailer/Continue_to_your_application.png" width="348" height="75" border="0" /></a></p>
+                        <!--<p >In case you face any difficulties in the process, feel free to write to <a href="mailto: tech@isme.co.in">tech@isme.co.in </a></p>-->
+                        
+                        </td>
+                    </tr>
+                </table>
+                </td>
+              </tr>
+          </table></td>
+        </tr>
+      </table>
+      <table width="1050" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td height="50" style="background-image:url(<%= base_url() %>mailer/img_bg-1.png); background-repeat:no-repeat; background-position:bottom;">&nbsp;</td>
+        </tr>
+      </table>
+      <table width="1050" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td align="center"><table width="60%" border="0" align="center" cellpadding="3" cellspacing="0">
+            <tr>
+              <td height="19" align="center" valign="top" style="font-family: 'Roboto', sans-serif; font-weight:400; font-size:14px; line-height:22px;"><a style="font-weight:400;"><strong>For any further information / query, please contact <%= basicApplnDetails.specialisation_contact_person %> on <a  style="font-weight:500;">+91 <%= basicApplnDetails.specialisation_contact_phone %></a> you can also email at <a href="mailto: <%= basicApplnDetails.specialisation_contact_email %>"  style="font-weight:500;"><%= basicApplnDetails.specialisation_contact_email %></a> </strong></a></td>
+            </tr>
+            
+            <tr>
+              <td height="19" align="center" valign="top" style="font-family: 'Roboto', sans-serif; font-weight:400; font-size:14px; line-height:22px;"><img src="<%= base_url() %>mailer/isme-big.png" height="51" /></td>
+            </tr>
+            <tr>
+              <td height="19" align="center" valign="top" style="font-family: 'Roboto', sans-serif; font-weight:400; font-size:14px; line-height:22px;"><a style="font-weight:500;"><%= basicApplnDetails.school_name %>,</a> <br />
+                <%= basicApplnDetails.school_address %></td>
+            </tr>
+          </table>
+          <br /></td></tr>
+    </table></td>
+  </tr>
+</table>
+</body>
+</html>

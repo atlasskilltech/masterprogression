@@ -1,0 +1,58 @@
+
+      <!-- result section -->
+      <div class="finalResultSection">
+         <div class="container">
+            <div class="row resultRow">
+               <div class="finalResultIconFee">
+                  <img src="<%= base_url() %>assets/admissions-assets/images/fee-done.svg" alt="">
+               </div>
+            </div>
+            <div class="row resultRow">
+               <p class="finalAdmResultHead">Congratulations!! </p>
+            </div>
+            <div class="row resultRow">
+               
+               <p class="finalResultpara">You have successfully paid your
+                  <span class="finalResultHighlight">
+                  Admission Fee. 
+                  </span>
+                   
+               </p>
+               <p class="finalResultpara">
+                  
+               </p>
+            </div>
+            
+         </div>
+      </div>
+      <!-- result section end-->
+      <!-- header end -->
+     
+   <script>
+      function openNav() {
+        document.getElementById("mySidenav").style.width = "341px";
+      }
+
+      function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+      }
+      
+      function semesterClick()
+{
+   
+	$.ajax
+	({
+		type:"POST",
+		url:'<%= base_url('semester/semesterClick') %>',
+        
+        dataType: "json",
+	  	success:function(res)
+		{
+		  window.location="<%= base_url() %>semester/paynow";
+		    
+		}
+	});	
+	
+}
+    </script>
+   

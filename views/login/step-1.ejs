@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Maven+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="<%= base_url('assets/admission/css/style.css') %>">
+    <link rel="stylesheet" type="text/css" href="<%= base_url('assets/admission/css/font.css') %>">
+    <title>Masters Progression Portal</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5FTSFZ9M92"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', 'G-5FTSFZ9M92');
+    </script>
+  </head>
+  <body class="main-section">
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#"><img src="<%= base_url('assets/admission/images/atlas-logo.png') %>" class="logo-img"></a>
+      </nav>
+    </header>
+
+    <section>
+      <div class="container">
+        <div class="row uni-row">
+          <div>
+            <div class="center-div">
+              <p class="uni-name"><span class="welcome-line">Welcome to</span> ATLAS SkillTech University!</p>
+              <p class="second-line">To check your Application Status, enter the <span class="highlight-text">Application Number</span> shared with you over
+                <br>
+                <span class="highlight-text">Email</span> to proceed to the next step. </p>
+              <center>
+                <div class="cust-form">
+                  <div class="input-group mb-3">
+                    <input type="text" class="form-control" name="applnID" placeholder="Enter your application ID" onKeyPress="myFunction(event)" autofocus>
+                    <div class="input-group-append">
+                      <button type="button" class="btn app-btn" onClick="loginWithApplnID()"><img src="<%= base_url('assets/admission/images/btn-img.png') %>"></button>
+                    </div>
+                  </div>
+                </div>
+              </center>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $('input').on('focus keypress', function () {
+          $('input').removeClass('error');
+          $('input').attr('placeholder', 'Application ID');
+        });
+      });
+
+      function loginWithApplnID() {
+        var applnID = $("input[name='applnID']").val();
+        $.ajax({
+          type: "POST",
+          url: "<%= base_url('login/applicationStatus/loginWithApplnID') %>",
+          dataType: 'json',
+          data: { applnID: applnID },
+          success: function (res) {
+            if (res.status == 0) {
+              $('input').blur();
+              $('input').val('');
+              $('input').addClass('error');
+              $('input').attr('placeholder', res.error);
+            } else if (res.status == 1) {
+              location.reload();
+            }
+          }
+        });
+      }
+
+      function myFunction(e) {
+        if (event.which == 13 || event.keyCode == 13) { loginWithApplnID(); }
+      }
+    </script>
+  </body>
+</html>

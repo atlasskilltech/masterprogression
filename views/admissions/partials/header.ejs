@@ -1,0 +1,40 @@
+<div class="headbar">
+  <div class="container-fluid">
+    <div class="row resp-header">
+      <div class="col-md-4">
+        <div class="left-bar">
+          <div class="logo">
+            <a href="#"><img src="<%= base_url('assets/isme/images/logo.png') %>" alt=""></a>
+          </div>
+          <div id="applicant-detail">
+            <h4><%= basicDetails.name %>'s Application</h4>
+            <span>App No: <%= basicDetails.applnID %></span>
+            <a href="<%= base_url('dashboard/logout') %>" class="logout">Save &amp; exit <img src="<%= base_url('assets/dashboard/images/logout.png') %>" alt=""></a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="progression">
+          <div class="timeline">
+            <ul id="akhil">
+              <li><div class="circle-wrap"><div class="circle">1</div></div><span>Request Accept</span></li>
+              <li><div class="circle-wrap"><div class="circle">2</div></div><span>LOR FORM</span></li>
+              <li><div class="circle-wrap"><div class="circle">3</div></div><span>Payment</span></li>
+              <li><div class="circle-wrap"><div class="circle">4</div></div><span>Download</span></li>
+            </ul>
+          </div>
+          <img class="border-line" src="<%= base_url('assets/dashboard/images/border.png') %>" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function () {
+    var active = <%= typeof active !== 'undefined' && active ? active : 0 %>;
+    for (var i = 0; i < active; i++) {
+      $("#akhil li:eq(" + i + ") div div").addClass('active').html('<i class="fa fa-check" aria-hidden="true"></i>');
+    }
+  });
+</script>

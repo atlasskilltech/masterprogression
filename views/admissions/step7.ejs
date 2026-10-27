@@ -1,0 +1,18 @@
+<!-- TODO: semester fee payment page (step7.php not supplied). Renders Razorpay checkout. -->
+<div class="finalResultSection"><div class="container" style="margin-top:60px;">
+  <div class="row"><p class="finalAdmResultHead">Semester Fee</p></div>
+  <div class="row"><p>Amount: <%= typeof amount !== 'undefined' ? amount : '-' %></p></div>
+  <button id="rzp-button" class="btn appDetailSaveBtn">Pay Now</button>
+</div></div>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  var options = <%- JSON.stringify(typeof checkout !== 'undefined' ? checkout : {}) %>;
+  options.handler = function (res) {
+    var f = document.createElement('form'); f.method = 'POST'; f.action = '<%= base_url("semester/Verify") %>';
+    ['razorpay_payment_id','razorpay_order_id','razorpay_signature'].forEach(function(k){
+      var i=document.createElement('input'); i.type='hidden'; i.name=k; i.value=res[k]; f.appendChild(i);
+    });
+    document.body.appendChild(f); f.submit();
+  };
+  document.getElementById('rzp-button').onclick = function(e){ new Razorpay(options).open(); e.preventDefault(); };
+</script>
