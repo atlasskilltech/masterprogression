@@ -54,7 +54,36 @@ app.use(`${BASE_URL}/semester`, require('./routes/semester'));
 // Root -> the first login step (matches the live URL .../login/applicationStatus)
 app.get(`${BASE_URL}/`, (req, res) => res.redirect(`${BASE_URL}/login/applicationStatus`));
 
+// ---- Startup DB check ----
+// Fail loudly and clearly if the diceapp DB is unreachable, instead of only
+// surfacing "Access denied / using password: NO" later on the first login.
+const pool = require('./config/db');
+(async () => {
+  try {
+    const conn = await pool.getConnection();
+    await conn.ping();
+    conn.release();
+    console.log(`DB connected: ${process.env.DB_USER || 'root'}@${process.env.DB_HOST || 'localhost'}:${process.env.DB_PORT || 3306}/${process.env.DB_NAME || 'diceapp'}`);
+  } catch (err) {
+    console.error('DB connection FAILED:', err.message);
+    if (/using password: NO/.test(err.message)) {
+      console.error('-> No DB password was sent. Create a .env file (cp .env.example .env) and set DB_PASSWORD.');
+    }
+  }
+})();
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Masters Progression Portal running on http://localhost:${PORT}${BASE_URL}/login/applicationStatus`);
+});
+
+// Give a clear message when the port is already taken (common with pm2
+// starting a second instance) instead of crashing with a raw EADDRINUSE stack.
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`Port ${PORT} is already in use. Another process (or a duplicate pm2 instance) is bound to it.`);
+    console.error(`-> Find it:  lsof -i :${PORT}   (or: pm2 list)   then stop the stray process and restart.`);
+    process.exit(1);
+  }
+  throw err;
 });
