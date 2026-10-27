@@ -25,5 +25,5 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             npm ci --only=production
-            pm2 restart masterprogression || pm2 start server.js --name masterprogression
+            pm2 restart masterprogression || pm2 start app.js --name masterprogression
             pm2 save
