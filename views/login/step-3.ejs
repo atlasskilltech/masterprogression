@@ -1,107 +1,217 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Maven+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="<%= base_url('assets/admission/css/style.css') %>">
-    <link rel="stylesheet" type="text/css" href="<%= base_url('assets/admission/css/font.css') %>">
-    <title>Admission Portal</title>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5FTSFZ9M92"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
-      gtag('js', new Date());
-      gtag('config', 'G-5FTSFZ9M92');
-    </script>
-  </head>
-  <body class="main-section">
-    <header>
-      <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="#"><img src="<%= base_url('assets/admission/images/atlas-logo.png') %>" class="logo-img"></a>
-      </nav>
-    </header>
+<html lang="en" class="scroll-smooth">
+<head>
+<%- include('partials/head') %>
+  <title>Verify OTP · ATLAS</title>
+</head>
 
-    <div>
-      <div class="center-div">
-        <p class="opt-head">Verification Code</p>
-        <p class="otp-para">Enter the 4 digit verification code sent to the <br>Mobile number:
-          <span class="otp-highlight">xxxxxx<%= mobileLast4 %></span>
-        </p>
-        <center>
-          <div class="container">
-            <div class="row justify-content-md-center">
-              <div class="col-md-12 text-center">
-                <div class="row">
-                  <div class="col-sm-12">
-                    <form action="javascript:void(0)" class="mt-5">
-                      <input class="otp small-box" type="text" name="otp" placeholder="Enter OTP" onKeyPress="myFunction(event)" maxlength="4" autofocus>
-                    </form>
-                  </div>
-                </div>
+<body class="relative min-h-screen bg-slate-50 font-sans text-slate-800 antialiased transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100">
 
-                <div class="row otp-btn-row">
-                  <div class="btn-gap">
-                    <div class="input-group mb-3">
-                      <button type="button" class="btn login-back-btn" onClick="window.location.href='<%= base_url('login/verification/chooseMobile') %>'"><img src="<%= base_url('assets/admission/images/back-btn-img.png') %>"></button>
-                      <div class="input-group-append">
-                        <button type="button" class="btn login-back-btn login-back-txt-btn" onClick="window.location.href='<%= base_url('login/verification/chooseMobile') %>'">Back</button>
-                      </div>
-                    </div>
-                  </div>
+<%- include('partials/background') %>
 
-                  <div>
-                    <div class="input-group mb-3">
-                      <button type="button" class="btn verify-btn" onClick="VerificationOTP()">Verify</button>
-                      <div class="input-group-append">
-                        <button type="button" class="btn app-btn" onClick="VerificationOTP()"><img src="<%= base_url('assets/admission/images/btn-img.png') %>"></button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </center>
-      </div>
+<header class="relative z-10">
+  <div class="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-6 sm:px-6">
+<%- include('partials/logo') %>
+
+    <div class="flex items-center gap-3">
+      <a href="<%= base_url('login/verification/chooseMobile') %>"
+         class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-medium text-slate-600 backdrop-blur hover:bg-slate-100 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10">
+        <i data-lucide="arrow-left" class="h-4 w-4"></i> Back
+      </a>
+<%- include('partials/theme-toggle') %>
     </div>
+  </div>
+</header>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script>
-      $(document).ready(function () {
-        $('input').on('focus keypress', function () {
-          $('input').removeClass('error');
-          $('input').attr('placeholder', 'Enter OTP');
-        });
-      });
+<%
+  /* OTP box state classes — shared with the JS below */
+  var boxBase = 'h-14 w-12 sm:w-14 rounded-xl border text-center text-2xl font-semibold tracking-tight focus:outline-none focus:ring-2 focus:ring-indigo-500/40';
+  var boxOk   = 'border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:border-indigo-400 dark:border-white/15 dark:bg-slate-900/80 dark:text-white dark:placeholder:text-slate-600';
+  var boxBad  = 'border-rose-400 bg-white text-slate-900 ring-2 ring-rose-500/30 dark:border-rose-500 dark:bg-slate-900/80 dark:text-white';
+  var last4   = typeof mobileLast4 !== 'undefined' ? mobileLast4 : '';
+%>
 
-      function VerificationOTP() {
-        var otp = $("input[name='otp']").val();
-        $.ajax({
-          type: "POST",
-          url: "<%= base_url('login/verification/VerificationOTP') %>",
-          dataType: "json",
-          data: { otp: otp },
-          success: function (res) {
-            if (res.status == 0) {
-              $('input').blur();
-              $('input').val('');
-              $('input').addClass('error');
-              $('input').attr('placeholder', res.msg);
-            } else if (res.status == 1) {
-              window.location = "<%= base_url('lor') %>";
-            }
-          }
-        });
+<main class="relative z-10 mx-auto flex max-w-md flex-col items-center px-4 pb-16 sm:px-6">
+
+  <nav class="mb-10 flex flex-wrap items-center justify-center gap-2 text-xs font-medium">
+    <span class="flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1.5 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"><i data-lucide="check" class="h-3.5 w-3.5"></i>Application</span>
+    <span class="h-px w-6 bg-slate-300 dark:bg-white/15"></span>
+    <span class="flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1.5 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"><i data-lucide="check" class="h-3.5 w-3.5"></i>Contact</span>
+    <span class="h-px w-6 bg-slate-300 dark:bg-white/15"></span>
+    <span class="flex items-center gap-2 rounded-full bg-indigo-100 px-3 py-1.5 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-200"><span class="grid h-4 w-4 place-items-center rounded-full bg-indigo-500 text-[10px] text-white">3</span>Verify OTP</span>
+  </nav>
+
+  <div class="w-full rounded-3xl border border-slate-200 bg-white p-6 text-center shadow-xl backdrop-blur-2xl dark:border-white/10 dark:bg-white/[0.06] dark:shadow-2xl dark:shadow-indigo-900/30 sm:p-10">
+    <span class="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-indigo-500 to-cyan-500 text-white shadow-lg shadow-indigo-600/40">
+      <i data-lucide="shield-check" class="h-6 w-6"></i>
+    </span>
+
+    <h1 class="mt-6 text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">Verification code</h1>
+    <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">
+      Enter the 4-digit code we sent to<br />
+      <span class="font-medium text-slate-800 dark:text-slate-200">+91 xxxxxx<%= last4 %></span>
+    </p>
+
+    <form id="otpForm" action="javascript:void(0)" class="mt-8">
+      <input type="hidden" name="otp" id="otpValue" />
+
+      <div id="otpBoxes" class="flex items-center justify-center gap-3">
+        <% for (var b = 0; b < 4; b++) { %>
+          <input data-otp type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" maxlength="1"
+                 aria-label="Digit <%= b + 1 %>" <%= b === 0 ? 'autofocus' : '' %>
+                 class="<%= boxBase %> <%= boxOk %>" />
+        <% } %>
+      </div>
+
+      <p id="otpError" class="mt-4 hidden text-xs font-medium text-rose-600 dark:text-rose-400"></p>
+      <p id="otpSuccess" class="mt-4 hidden items-center justify-center gap-2 text-sm font-semibold text-emerald-600 dark:text-emerald-400"></p>
+
+      <div class="mt-8">
+        <button type="submit" id="verifyBtn"
+          class="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:from-indigo-500 hover:to-cyan-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/40 disabled:cursor-not-allowed disabled:opacity-60">
+          <i data-lucide="lock-keyhole" class="h-4 w-4"></i><span id="verifyLabel">Verify &amp; continue</span>
+        </button>
+      </div>
+
+      <a href="<%= base_url('login/verification/chooseMobile') %>"
+         class="mt-4 inline-flex items-center justify-center gap-2 text-xs font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200">
+        <i data-lucide="rotate-ccw" class="h-3.5 w-3.5"></i>Use a different contact
+      </a>
+    </form>
+  </div>
+
+  <p class="mt-6 text-center text-xs text-slate-500 dark:text-slate-400">
+    Tip: paste the entire code and it will auto-fill all boxes.
+  </p>
+</main>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<%- include('partials/theme-script') %>
+<script>
+(function () {
+  var VERIFY_URL  = "<%= base_url('login/verification/VerificationOTP') %>";
+  var SUCCESS_URL = "<%= base_url('lor') %>";
+
+  var BOX_OK  = "<%= boxOk %>".split(' ');
+  var BOX_BAD = "<%= boxBad %>".split(' ');
+
+  var boxes   = document.querySelectorAll('[data-otp]');
+  var hidden  = document.getElementById('otpValue');
+  var errorEl = document.getElementById('otpError');
+  var okEl    = document.getElementById('otpSuccess');
+  var btn     = document.getElementById('verifyBtn');
+  var btnLbl  = document.getElementById('verifyLabel');
+  var busy    = false;
+
+  function collect() {
+    var v = '';
+    boxes.forEach(function (b) { v += b.value; });
+    hidden.value = v;
+    return v;
+  }
+
+  function setError(on, msg) {
+    boxes.forEach(function (b) {
+      BOX_BAD.forEach(function (c) { b.classList.toggle(c, on);  });
+      BOX_OK.forEach(function (c)  { b.classList.toggle(c, !on); });
+    });
+    errorEl.textContent = msg || '';
+    errorEl.classList.toggle('hidden', !on);
+  }
+
+  function setLoading(on) {
+    busy = on;
+    btn.disabled = on;
+    btnLbl.textContent = on ? 'Verifying…' : 'Verify & continue';
+  }
+
+  function fill(digits, from) {
+    for (var k = 0; k < digits.length && from + k < boxes.length; k++) boxes[from + k].value = digits[k];
+    collect();
+    setError(false);
+    var next = Math.min(from + digits.length, boxes.length - 1);
+    boxes[next].focus();
+    if (collect().length === boxes.length) VerificationOTP();
+  }
+
+  boxes.forEach(function (box, i) {
+    box.addEventListener('input', function () {
+      var digits = box.value.replace(/[^0-9]/g, '');
+      box.value = '';
+      if (digits.length > 1) { fill(digits, i); return; } // SMS autofill / IME
+      box.value = digits;
+      setError(false);
+      if (digits && boxes[i + 1]) boxes[i + 1].focus();
+      collect();
+    });
+
+    box.addEventListener('keydown', function (e) {
+      if (e.key === 'Backspace' && !box.value && boxes[i - 1]) {
+        boxes[i - 1].focus();
+        boxes[i - 1].value = '';
+        collect();
+        e.preventDefault();
       }
+      if (e.key === 'ArrowLeft'  && boxes[i - 1]) boxes[i - 1].focus();
+      if (e.key === 'ArrowRight' && boxes[i + 1]) boxes[i + 1].focus();
+      if (e.key === 'Enter') { e.preventDefault(); VerificationOTP(); }
+    });
 
-      function myFunction(e) {
-        if (event.which == 13 || event.keyCode == 13) { VerificationOTP(); }
+    box.addEventListener('focus', function () { box.select(); });
+
+    box.addEventListener('paste', function (e) {
+      e.preventDefault();
+      var digits = (e.clipboardData || window.clipboardData).getData('text').replace(/[^0-9]/g, '');
+      if (digits) fill(digits, 0);
+    });
+  });
+
+  document.getElementById('otpForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    VerificationOTP();
+  });
+
+  window.VerificationOTP = function () {
+    if (busy) return;
+    var otp = collect();
+
+    if (otp.length < boxes.length) {
+      setError(true, 'Please enter all ' + boxes.length + ' digits.');
+      boxes[otp.length].focus();
+      return;
+    }
+
+    setLoading(true);
+    $.ajax({
+      type: 'POST',
+      url: VERIFY_URL,
+      dataType: 'json',
+      data: { otp: otp },
+      success: function (res) {
+        if (res.status == 1) {
+          setError(false);
+          okEl.innerHTML = '<i data-lucide="check-circle-2" class="h-4 w-4"></i> Your OTP is verified.';
+          okEl.classList.remove('hidden');
+          okEl.classList.add('flex');
+          if (window.lucide) lucide.createIcons();
+          setTimeout(function () { window.location = SUCCESS_URL; }, 800);
+          return;
+        }
+        setLoading(false);
+        boxes.forEach(function (b) { b.value = ''; });
+        collect();
+        setError(true, res.msg || "OTP doesn't match.");
+        boxes[0].focus();
+      },
+      error: function () {
+        setLoading(false);
+        setError(true, 'Something went wrong. Please try again.');
       }
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
-  </body>
+    });
+  };
+
+  if (window.lucide) lucide.createIcons();
+})();
+</script>
+</body>
 </html>

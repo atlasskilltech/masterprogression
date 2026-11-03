@@ -1,87 +1,197 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Maven+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="<%= base_url('assets/admission/css/style.css') %>">
-    <link rel="stylesheet" type="text/css" href="<%= base_url('assets/admission/css/font.css') %>">
-    <title>Masters Progression Portal</title>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5FTSFZ9M92"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
-      gtag('js', new Date());
-      gtag('config', 'G-5FTSFZ9M92');
-    </script>
-  </head>
-  <body class="main-section">
-    <header>
-      <nav class="navbar navbar-expand-lg navbar-light">
-        <a class="navbar-brand" href="#"><img src="<%= base_url('assets/admission/images/atlas-logo.png') %>" class="logo-img"></a>
-      </nav>
-    </header>
+<html lang="en" class="scroll-smooth">
+<head>
+<%- include('partials/head') %>
+  <title>Masters Progression Portal · ATLAS</title>
+</head>
 
-    <section>
-      <div class="container">
-        <div class="row uni-row">
-          <div>
-            <div class="center-div">
-              <p class="uni-name"><span class="welcome-line">Welcome to</span> ATLAS SkillTech University!</p>
-              <p class="second-line">To check your Application Status, enter the <span class="highlight-text">Application Number</span> shared with you over
-                <br>
-                <span class="highlight-text">Email</span> to proceed to the next step. </p>
-              <center>
-                <div class="cust-form">
-                  <div class="input-group mb-3">
-                    <input type="text" class="form-control" name="applnID" placeholder="Enter your application ID" onKeyPress="myFunction(event)" autofocus>
-                    <div class="input-group-append">
-                      <button type="button" class="btn app-btn" onClick="loginWithApplnID()"><img src="<%= base_url('assets/admission/images/btn-img.png') %>"></button>
-                    </div>
-                  </div>
-                </div>
-              </center>
-            </div>
-          </div>
+<body class="relative min-h-screen bg-slate-50 font-sans text-slate-800 antialiased transition-colors duration-300 dark:bg-slate-950 dark:text-slate-100">
+
+<%- include('partials/background') %>
+
+<header class="relative z-10">
+  <div class="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-6 sm:px-6">
+<%- include('partials/logo') %>
+
+    <div class="flex items-center gap-3">
+      <a href="https://atlasuniversity.edu.in" target="_blank" rel="noopener"
+         class="hidden items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-medium text-slate-600 backdrop-blur hover:bg-slate-100 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10 sm:inline-flex">
+        <i data-lucide="globe" class="h-4 w-4"></i> atlasuniversity.edu.in
+      </a>
+<%- include('partials/theme-toggle') %>
+    </div>
+  </div>
+</header>
+
+<main class="relative z-10 mx-auto grid max-w-7xl gap-12 px-4 pb-16 sm:px-6 lg:grid-cols-2 lg:items-center lg:gap-16 lg:pb-24">
+
+  <!-- Hero -->
+  <section class="order-2 lg:order-1">
+    <span class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-cyan-700 backdrop-blur dark:border-white/10 dark:bg-white/5 dark:text-cyan-300">
+      <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400"></span>
+      Shape Your Future with ATLAS
+    </span>
+
+    <h1 class="mt-6 text-4xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-5xl lg:text-6xl">
+      Welcome to your ATLAS
+      <span class="bg-gradient-to-r from-indigo-600 via-cyan-600 to-emerald-600 bg-clip-text text-transparent dark:from-indigo-300 dark:via-cyan-200 dark:to-emerald-200">Masters journey.</span>
+    </h1>
+
+    <p class="mt-5 max-w-lg text-base leading-relaxed text-slate-600 dark:text-slate-300">
+      Track your application status, submit your LOR, follow your interview and pay your fees — all in one place.
+      Enter the Application Number we sent over email to continue.
+    </p>
+
+    <ul class="mt-8 grid gap-3 text-sm sm:grid-cols-2">
+      <li class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 backdrop-blur dark:border-white/5 dark:bg-white/[0.03]">
+        <span class="grid h-8 w-8 place-items-center rounded-lg bg-indigo-100 text-indigo-700 dark:bg-indigo-500/15 dark:text-indigo-300"><i data-lucide="shield-check" class="h-4 w-4"></i></span>
+        <span class="text-slate-600 dark:text-slate-300">Secure OTP verification</span>
+      </li>
+      <li class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 backdrop-blur dark:border-white/5 dark:bg-white/[0.03]">
+        <span class="grid h-8 w-8 place-items-center rounded-lg bg-cyan-100 text-cyan-700 dark:bg-cyan-500/15 dark:text-cyan-300"><i data-lucide="file-check-2" class="h-4 w-4"></i></span>
+        <span class="text-slate-600 dark:text-slate-300">Live application progress</span>
+      </li>
+      <li class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 backdrop-blur dark:border-white/5 dark:bg-white/[0.03]">
+        <span class="grid h-8 w-8 place-items-center rounded-lg bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-500/15 dark:text-fuchsia-300"><i data-lucide="graduation-cap" class="h-4 w-4"></i></span>
+        <span class="text-slate-600 dark:text-slate-300">LOR &amp; interview updates</span>
+      </li>
+      <li class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 backdrop-blur dark:border-white/5 dark:bg-white/[0.03]">
+        <span class="grid h-8 w-8 place-items-center rounded-lg bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300"><i data-lucide="credit-card" class="h-4 w-4"></i></span>
+        <span class="text-slate-600 dark:text-slate-300">One-tap fee payments</span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Sign-in card -->
+  <section class="order-1 lg:order-2">
+    <div class="relative mx-auto w-full max-w-md rounded-3xl border border-slate-200 bg-white p-6 shadow-xl backdrop-blur-2xl dark:border-white/10 dark:bg-white/[0.06] dark:shadow-glow sm:p-10">
+      <div class="absolute -top-px left-10 right-10 h-px bg-gradient-to-r from-transparent via-slate-900/10 to-transparent dark:via-white/30"></div>
+
+      <div class="mb-6 flex items-center gap-3">
+        <span class="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-500 text-white shadow-lg shadow-indigo-500/30">
+          <i data-lucide="log-in" class="h-5 w-5"></i>
+        </span>
+        <div>
+          <h2 class="text-xl font-semibold text-slate-900 dark:text-white">Sign in to continue</h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Use your Application Number</p>
         </div>
       </div>
-    </section>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script>
-      $(document).ready(function () {
-        $('input').on('focus keypress', function () {
-          $('input').removeClass('error');
-          $('input').attr('placeholder', 'Application ID');
-        });
-      });
+      <form id="loginForm" class="space-y-5" action="javascript:void(0)" method="post" novalidate>
+        <label class="block">
+          <span class="mb-2 block text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">Application Number</span>
 
-      function loginWithApplnID() {
-        var applnID = $("input[name='applnID']").val();
-        $.ajax({
-          type: "POST",
-          url: "<%= base_url('login/applicationStatus/loginWithApplnID') %>",
-          dataType: 'json',
-          data: { applnID: applnID },
-          success: function (res) {
-            if (res.status == 0) {
-              $('input').blur();
-              $('input').val('');
-              $('input').addClass('error');
-              $('input').attr('placeholder', res.error);
-            } else if (res.status == 1) {
-              location.reload();
-            }
-          }
-        });
+          <div id="applnWrap"
+               class="group flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 transition focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-500/40 dark:border-white/10 dark:bg-slate-900/60">
+            <i data-lucide="hash" class="h-4 w-4 text-slate-400 group-focus-within:text-indigo-500 dark:group-focus-within:text-indigo-300"></i>
+            <input type="text" name="applnID" id="applnID" autofocus autocomplete="off" placeholder="e.g. 2700000"
+                   class="w-full bg-transparent text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none dark:text-white dark:placeholder:text-slate-500" />
+          </div>
+
+          <p id="applnError" class="mt-2 hidden text-xs font-medium text-rose-500"></p>
+          <p id="applnHint" class="mt-2 text-xs text-slate-500">Shared with you over Email.</p>
+        </label>
+
+        <button type="submit" id="loginBtn"
+          class="group inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:from-indigo-500 hover:to-cyan-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/40 disabled:cursor-not-allowed disabled:opacity-60">
+          <span id="loginBtnLabel">Continue</span>
+          <i data-lucide="arrow-right" class="h-4 w-4 transition group-hover:translate-x-0.5"></i>
+        </button>
+
+        <p class="text-center text-[11px] leading-relaxed text-slate-500">
+          By continuing, you accept the
+          <a class="text-cyan-700 hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200" href="#">Terms &amp; Conditions</a>
+          and
+          <a class="text-cyan-700 hover:text-cyan-800 dark:text-cyan-300 dark:hover:text-cyan-200" href="#">Privacy Policy</a>.
+        </p>
+      </form>
+
+      <div class="mt-8 flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-white/5 dark:bg-white/[0.02]">
+        <span class="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-amber-100 text-amber-700 dark:bg-amber-400/15 dark:text-amber-300"><i data-lucide="life-buoy" class="h-4 w-4"></i></span>
+        <p class="min-w-0 break-words text-xs leading-relaxed text-slate-600 dark:text-slate-400">
+          Need help? Email
+          <a href="mailto:admissions@atlasuniversity.edu.in" class="font-medium text-slate-800 hover:text-slate-900 dark:text-slate-200 dark:hover:text-white">admissions@atlasuniversity.edu.in</a>
+        </p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="relative z-10 border-t border-slate-200 dark:border-white/5">
+  <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-5 text-xs text-slate-500 sm:flex-row sm:px-6">
+    <p>© <%= new Date().getFullYear() %> ATLAS SkillTech University. All rights reserved.</p>
+    <p>Masters Progression Portal</p>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<%- include('partials/theme-script') %>
+<script>
+(function () {
+  var input    = document.getElementById('applnID');
+  var wrap     = document.getElementById('applnWrap');
+  var errorEl  = document.getElementById('applnError');
+  var hintEl   = document.getElementById('applnHint');
+  var btn      = document.getElementById('loginBtn');
+  var btnLabel = document.getElementById('loginBtnLabel');
+
+  var LOGIN_URL = "<%= base_url('login/applicationStatus/loginWithApplnID') %>";
+
+  function setError(on, msg) {
+    wrap.classList.toggle('border-rose-400', on);
+    wrap.classList.toggle('ring-2', on);
+    wrap.classList.toggle('ring-rose-500/30', on);
+    wrap.classList.toggle('border-slate-200', !on);
+    errorEl.textContent = msg || '';
+    errorEl.classList.toggle('hidden', !on);
+    hintEl.classList.toggle('hidden', on);
+  }
+
+  function setLoading(on) {
+    btn.disabled = on;
+    btnLabel.textContent = on ? 'Signing in…' : 'Continue';
+  }
+
+  input.addEventListener('input', function () { setError(false); });
+
+  window.loginWithApplnID = function () {
+    var applnID = input.value.trim();
+    if (!applnID) {
+      setError(true, 'Please enter your Application Number.');
+      input.focus();
+      return;
+    }
+
+    setLoading(true);
+    $.ajax({
+      type: 'POST',
+      url: LOGIN_URL,
+      dataType: 'json',
+      data: { applnID: applnID },
+      success: function (res) {
+        if (res.status == 1) {
+          location.reload();
+          return;
+        }
+        setLoading(false);
+        input.value = '';
+        setError(true, res.error || 'Invalid Application ID.');
+        input.focus();
+      },
+      error: function () {
+        setLoading(false);
+        setError(true, 'Something went wrong. Please try again.');
       }
+    });
+  };
 
-      function myFunction(e) {
-        if (event.which == 13 || event.keyCode == 13) { loginWithApplnID(); }
-      }
-    </script>
-  </body>
+  document.getElementById('loginForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    loginWithApplnID();
+  });
+
+  if (window.lucide) lucide.createIcons();
+})();
+</script>
+</body>
 </html>

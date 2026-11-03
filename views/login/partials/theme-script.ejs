@@ -1,0 +1,13 @@
+<script>
+  /* Light / dark toggle. Bound once here — page scripts must not bind [data-theme-toggle] again. */
+  (function () {
+    var root = document.documentElement;
+    document.querySelectorAll('[data-theme-toggle]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var dark = root.classList.toggle('dark');
+        root.style.colorScheme = dark ? 'dark' : 'light';
+        try { localStorage.setItem('atlas-theme', dark ? 'dark' : 'light'); } catch (_) {}
+      });
+    });
+  })();
+</script>
