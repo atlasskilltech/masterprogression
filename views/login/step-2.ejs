@@ -36,7 +36,7 @@
   <div class="text-center">
     <h1 class="text-3xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-4xl">Where should we send the code?</h1>
     <p class="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-      Pick one of the contacts on your application. We'll send a 4-digit verification code to that mobile number.
+      Pick one of the contacts on your application. We'll send a 4-digit verification code to that mobile number<% if (typeof maskedEmail !== 'undefined' && maskedEmail) { %> and to the email on your application<% } %>.
     </p>
   </div>
 
@@ -50,10 +50,13 @@
   var labelOn  = 'text-indigo-700 dark:text-indigo-300';
   var labelOff = 'text-slate-500 dark:text-slate-400';
 
+  var applicant = { name: 'Applicant', icon: 'user', recommended: true,
+                    wrap: 'bg-gradient-to-br from-indigo-500/15 to-cyan-500/15 dark:from-indigo-500/30 dark:to-cyan-500/30',
+                    color: 'text-indigo-600 dark:text-indigo-200' };
+  var email = typeof maskedEmail !== 'undefined' ? maskedEmail : '';
   var contacts = {
-    appln_phone:       { name: 'Applicant', icon: 'user',
-                         wrap: 'bg-gradient-to-br from-indigo-500/15 to-cyan-500/15 dark:from-indigo-500/30 dark:to-cyan-500/30',
-                         color: 'text-indigo-600 dark:text-indigo-200' },
+    master_phone:      applicant,
+    appln_phone:       applicant,
     appln_fatherPhone: { name: 'Father', icon: 'user-circle-2',
                          wrap: 'bg-slate-100 dark:bg-white/5', color: 'text-cyan-600 dark:text-cyan-300' },
     appln_motherPhone: { name: 'Mother', icon: 'user-circle-2',
@@ -90,13 +93,21 @@
 
     <span class="min-w-0 flex-1">
       <span data-label class="block text-xs font-semibold uppercase tracking-wide <%= isFirst ? labelOn : labelOff %>"><%= name %></span>
-      <span class="mt-1 flex items-center gap-2 text-sm text-slate-900 dark:text-white">
-        <i data-lucide="phone" class="h-3.5 w-3.5 text-slate-500 dark:text-slate-400"></i>
-        +91 xxxxxx<%= val.slice(-4) %>
+      <span class="mt-1 flex flex-wrap items-center gap-x-6 gap-y-1 text-sm text-slate-900 dark:text-white">
+        <span class="flex items-center gap-2">
+          <i data-lucide="phone" class="h-3.5 w-3.5 text-slate-500 dark:text-slate-400"></i>
+          +91 xxxxxx<%= val.slice(-4) %>
+        </span>
+        <% if (email && c.recommended) { %>
+        <span class="flex min-w-0 items-center gap-2">
+          <i data-lucide="mail" class="h-3.5 w-3.5 shrink-0 text-slate-500 dark:text-slate-400"></i>
+          <span class="truncate"><%= email %></span>
+        </span>
+        <% } %>
       </span>
     </span>
 
-    <% if (key === 'appln_phone') { %>
+    <% if (c.recommended) { %>
       <span class="hidden shrink-0 text-xs font-medium text-emerald-600 dark:text-emerald-300 sm:block">Recommended</span>
     <% } %>
   </button>

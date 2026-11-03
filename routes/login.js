@@ -15,6 +15,14 @@ const router = express.Router();
 const loginModel = require('../models/loginModel');
 const otp = require('../services/otpService');
 
+// r****i@gmail.com style masking (same as the Admission portal's mask_email).
+function maskEmail(e) {
+  if (!e || String(e).indexOf('@') === -1) return '';
+  const [user, domain] = String(e).split('@');
+  if (user.length <= 2) return '*'.repeat(Math.max(user.length, 1)) + '@' + domain;
+  return user[0] + '*'.repeat(user.length - 2) + user[user.length - 1] + '@' + domain;
+}
+
 /* ------------------------------------------------------------------ */
 /* applicationStatus controller                                        */
 /* ------------------------------------------------------------------ */
@@ -66,13 +74,19 @@ function verificationGuard(req, res, next) {
 
 // GET /login/verification/chooseMobile
 router.get('/verification/chooseMobile', verificationGuard, async (req, res) => {
+  let mobiles = {};
+  let email = '';
   try {
-    const mobiles = await loginModel.getMobileNos(req.session.applnStatus);
-    res.render('login/step-2', { mobiles: mobiles || {} });
+    mobiles = (await loginModel.getMobileNos(req.session.applnStatus)) || {};
   } catch (err) {
     console.error('chooseMobile error:', err.message);
-    res.render('login/step-2', { mobiles: {} });
   }
+  try {
+    email = (await loginModel.getContact(req.session.applnStatus)).email;
+  } catch (err) {
+    console.error('chooseMobile email lookup error:', err.message);
+  }
+  res.render('login/step-2', { mobiles, maskedEmail: maskEmail(email) });
 });
 
 // GET /login/verification/goBackToApplnStatus
@@ -82,6 +96,8 @@ router.get('/verification/goBackToApplnStatus', (req, res) => {
 });
 
 // POST /login/verification/generateOTP
+// Sends the same code by SMS and (when the application has one) by email.
+// Succeeds if at least one channel delivered it.
 router.post('/verification/generateOTP', verificationGuard, async (req, res) => {
   const mobile = (req.body.mobile || '').trim();
   if (!mobile) {
@@ -89,22 +105,41 @@ router.post('/verification/generateOTP', verificationGuard, async (req, res) => 
   }
 
   try {
+    // Only allow numbers that actually belong to this application.
+    const mobiles = (await loginModel.getMobileNos(req.session.applnStatus)) || {};
+    if (!Object.values(mobiles).some((m) => String(m).trim() === mobile)) {
+      return res.json({ status: 0, msg: 'Please select one of the numbers shown.' });
+    }
+
+    let contact = { email: '', name: '' };
+    try {
+      contact = await loginModel.getContact(req.session.applnStatus);
+    } catch (err) {
+      console.error('generateOTP email lookup error:', err.message);
+    }
+
     const code = otp.generateOtp();
-    const sent = await otp.sendSmsOtp(mobile, code);
+    const [smsOk, emailOk] = await Promise.all([
+      otp.sendSmsOtp(mobile, code),
+      contact.email ? otp.sendEmailOtp(contact.email, code, contact.name) : Promise.resolve(false),
+    ]);
     otp.sendWhatsappOtp(mobile, code); // best-effort, not awaited
 
-    if (sent) {
+    console.log(`[OTP] appl ${req.session.applnStatus}: sms=${smsOk} email=${emailOk}${contact.email ? '' : ' (no email on file)'}`);
+
+    if (smsOk || emailOk) {
       req.session.mobile = mobile;
       req.session.sentOtp = code;
-      return res.json({ status: 1, msg: 'Success.' });
+      req.session.otpEmail = emailOk ? contact.email : '';
+      return res.json({ status: 1, sms: !!smsOk, email: !!emailOk, msg: 'Success.' });
     }
     return res.json({
       status: 0,
-      msg: '<i class="fa fa-exclamation-circle" aria-hidden="true"></i> Error in generating OTP.',
+      msg: 'We could not send the verification code. Please try again in a moment or contact admissions.',
     });
   } catch (err) {
     console.error('generateOTP error:', err.message);
-    return res.json({ status: 0, msg: 'Error in generating OTP.' });
+    return res.json({ status: 0, msg: 'We could not send the verification code. Please try again.' });
   }
 });
 
@@ -115,6 +150,7 @@ router.get('/verification/verificationIndex', verificationGuard, (req, res) => {
   }
   res.render('login/step-3', {
     mobileLast4: String(req.session.mobile).slice(-4),
+    maskedEmail: maskEmail(req.session.otpEmail),
   });
 });
 
@@ -137,6 +173,7 @@ router.post('/verification/VerificationOTP', verificationGuard, (req, res) => {
   delete req.session.applnStatus;
   delete req.session.mobile;
   delete req.session.sentOtp;
+  delete req.session.otpEmail;
 
   res.json({ status: 1, msg: 'Success.' });
 });

@@ -5,14 +5,48 @@ const ejs = require('ejs');
 const path = require('path');
 require('dotenv').config();
 
+const env = (...names) => {
+  for (const n of names) {
+    const v = process.env[n];
+    if (v && String(v).trim()) return String(v).trim();
+  }
+  return '';
+};
+
+function config() {
+  const pass = env('SMTP_PASS', 'SENDGRID_API_KEY');
+  return {
+    host: env('SMTP_HOST') || 'smtp.sendgrid.net',
+    port: Number(env('SMTP_PORT')) || 587,
+    user: env('SMTP_USER') || (pass ? 'apikey' : ''), // SendGrid SMTP user is literally "apikey"
+    pass,
+    from: env('MAIL_FROM', 'EMAIL_FROM') || 'masterprogression@atlasuniversity.edu.in',
+    fromName: env('MAIL_FROM_NAME') || 'ATLAS Master Progression',
+  };
+}
+
+function isConfigured() {
+  const c = config();
+  return Boolean(c.user && c.pass);
+}
+
+let cached = null;
 function transport() {
-  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) return null;
-  return nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp.sendgrid.net',
-    port: Number(process.env.SMTP_PORT) || 587,
-    secure: false,
-    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-  });
+  const c = config();
+  if (!c.user || !c.pass) return null;
+  const key = `${c.host}|${c.port}|${c.user}|${c.pass}`;
+  if (!cached || cached.key !== key) {
+    cached = {
+      key,
+      t: nodemailer.createTransport({
+        host: c.host,
+        port: c.port,
+        secure: c.port === 465,
+        auth: { user: c.user, pass: c.pass },
+      }),
+    };
+  }
+  return cached.t;
 }
 
 // number_format(x, 2) helper for the mailer templates.
@@ -33,21 +67,33 @@ async function render(view, data) {
   return ejs.renderFile(file, locals);
 }
 
-// Send an email. opts: { to, cc, bcc, subject, html }
+// Send an email. opts: { to, cc, bcc, subject, html, text }. Resolves true/false.
 async function send(opts) {
   const t = transport();
   if (!t) {
-    console.log(`[mail][dev] would send "${opts.subject}" to`, opts.to);
-    return;
+    console.error(`[mail] SMTP not configured (SMTP_PASS / SENDGRID_API_KEY empty) — "${opts.subject}" NOT sent to`, opts.to);
+    return false;
   }
-  await t.sendMail({
-    from: `"${process.env.MAIL_FROM_NAME || 'ATLAS Master Progression'}" <${process.env.MAIL_FROM || 'masterprogression@atlasuniversity.edu.in'}>`,
-    to: opts.to,
-    cc: opts.cc,
-    bcc: opts.bcc,
-    subject: opts.subject,
-    html: opts.html,
-  });
+  const c = config();
+  try {
+    const info = await t.sendMail({
+      from: `"${c.fromName}" <${c.from}>`,
+      to: opts.to,
+      cc: opts.cc,
+      bcc: opts.bcc,
+      subject: opts.subject,
+      html: opts.html,
+      text: opts.text,
+    });
+    if (info.rejected && info.rejected.length) {
+      console.error('[mail] rejected recipients:', info.rejected, info.response);
+      return info.accepted && info.accepted.length > 0;
+    }
+    return true;
+  } catch (err) {
+    console.error('[mail] send failed:', err.responseCode || '', err.response || err.message);
+    return false;
+  }
 }
 
-module.exports = { send, render, nf };
+module.exports = { send, render, nf, isConfigured, config };
