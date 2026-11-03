@@ -30,4 +30,26 @@ async function getMobileNos(applnID) {
   return mobiles;
 }
 
-module.exports = { checkApplnID, getMobileNos };
+// Applicant email + name for the OTP email.
+// SELECT * so an unexpected column name never breaks login; we pick the
+// first non-empty email-looking column.
+const EMAIL_COLUMNS = ['master_email', 'master_email_id', 'master_emailid', 'master_emailID', 'email'];
+async function getContact(applnID) {
+  const [rows] = await pool.query(
+    'SELECT * FROM master_progression_application WHERE master_p_id = ? LIMIT 1',
+    [applnID]
+  );
+  if (!rows.length) return { email: '', name: '' };
+  const row = rows[0];
+  let email = '';
+  for (const col of EMAIL_COLUMNS) {
+    if (row[col] && String(row[col]).includes('@')) { email = String(row[col]).trim(); break; }
+  }
+  if (!email) {
+    const col = Object.keys(row).find((k) => /email/i.test(k) && row[k] && String(row[k]).includes('@'));
+    if (col) email = String(row[col]).trim();
+  }
+  return { email, name: row.master_name ? String(row.master_name).trim() : '' };
+}
+
+module.exports = { checkApplnID, getMobileNos, getContact };
